@@ -1,0 +1,7 @@
+pymongo
+sklearn
+pytubefix
+scipy
+tqdm
+fastapi
+pydantic

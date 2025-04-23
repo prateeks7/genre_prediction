@@ -21,12 +21,20 @@ track_title_artist = pd.DataFrame(list(track_artist_genre.find())).drop("_id",ax
 recommendation_data.set_index("track_id",inplace=True)
 track_title_artist.set_index("track_id",inplace=True)
 track_title_artist = track_title_artist.replace([np.inf, -np.inf], np.nan).fillna("-")
+
+HUGGINGFACE_PICKLE_URL = "https://huggingface.co/prateek7/final_optimized_classification_model.pkl/resolve/main/final_optimized_classification_model.pkl"
+
+response = requests.get(HUGGINGFACE_PICKLE_URL)
+response.raise_for_status()
+model = pickle.load(io.BytesIO(response.content))
+
 def new_song_recommendations(url_gerne_prob):
 
+    
     new_song_similarities = cosine_similarity(url_gerne_prob,recommendation_data[url_gerne_prob.columns])
     recommendation_data["cosine_similarity"] = new_song_similarities[0]
 
-
+    
 
     top_recommendations = recommendation_data.nlargest(10, "cosine_similarity").copy()
 
