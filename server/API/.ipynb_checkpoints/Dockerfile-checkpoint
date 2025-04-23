@@ -2,7 +2,7 @@
 FROM python:3.10
 
 # Set working directory to /app inside the container
-WORKDIR /app
+WORKDIR ./
 
 # Copy only the server/API folder into container
 COPY . .
