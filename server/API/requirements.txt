@@ -1,5 +1,5 @@
 pymongo
-sklearn
+scikit-learn
 pytubefix
 scipy
 tqdm

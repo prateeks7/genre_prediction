@@ -9,7 +9,7 @@ from sklearn.preprocessing import MinMaxScaler
 from pymongo import MongoClient
 import os
 
-MONGO_URI = "MONGO_URI_LINK"
+MONGO_URI = os.getenv("MONGO_URI_LINK")
 client = MongoClient(MONGO_URI)
 db = client["FMA_Recommendation"]
 recommendation = db["recommendation"]
