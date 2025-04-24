@@ -9,7 +9,9 @@ from sklearn.preprocessing import MinMaxScaler
 from pymongo import MongoClient
 import os
 
-MONGO_URI = os.getenv("MONGO_URI_LINK")
+
+
+MONGO_URI = "mongodb+srv://prateeks1110:prateeks.iu@recommendationdata.uywtlek.mongodb.net/?retryWrites=true&w=majority&appName=recommendationData"
 client = MongoClient(MONGO_URI)
 db = client["FMA_Recommendation"]
 recommendation = db["recommendation"]
@@ -22,11 +24,6 @@ recommendation_data.set_index("track_id",inplace=True)
 track_title_artist.set_index("track_id",inplace=True)
 track_title_artist = track_title_artist.replace([np.inf, -np.inf], np.nan).fillna("-")
 
-HUGGINGFACE_PICKLE_URL = "https://huggingface.co/prateek7/final_optimized_classification_model.pkl/resolve/main/final_optimized_classification_model.pkl"
-
-response = requests.get(HUGGINGFACE_PICKLE_URL)
-response.raise_for_status()
-model = pickle.load(io.BytesIO(response.content))
 
 def new_song_recommendations(url_gerne_prob):
 

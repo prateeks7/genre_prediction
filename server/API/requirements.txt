@@ -5,3 +5,8 @@ scipy
 tqdm
 fastapi
 pydantic
+uvicorn
+pandas
+numpy
+librosa
+xgboost
