@@ -28,11 +28,13 @@ def run_url_prob_pipeline(url):
     
     r = requests.post(api_url, params=params, headers=headers)
     print(r.json())
-    g = requests.get(f"https://youtube-to-mp315.p.rapidapi.com/status/{r.json()["id"]}", params=params, headers=headers)
+    status_id = r.json()["id"]
+    g = requests.get(f"https://youtube-to-mp315.p.rapidapi.com/status/{status_id}", params=params, headers=headers)
     while g.json()["status"] == "CONVERTING":
-        g = requests.get(f"https://youtube-to-mp315.p.rapidapi.com/status/{r.json()["id"]}", params=params, headers=headers)
-        print(g.json())
         time.sleep(30)
+        g = requests.get(f"https://youtube-to-mp315.p.rapidapi.com/status/{status_id}", params=params, headers=headers)
+        print(g.json())
+        
     
     mp = requests.get(r.json()["downloadUrl"])
     with open("song.mp3", "wb") as f:
