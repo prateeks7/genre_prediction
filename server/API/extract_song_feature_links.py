@@ -116,7 +116,7 @@ def run_url_prob_pipeline(url):
 
         except Exception as e:
             print('{}'.format( repr(e)))
-        os.remove("./song.wav")
+        
         return features
 
     features = pd.DataFrame(compute_features())
