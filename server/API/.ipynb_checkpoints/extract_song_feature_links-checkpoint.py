@@ -14,8 +14,12 @@ from tqdm import tqdm
 import requests
 
 import pickle
-with open('final_optimized_classification_model.pkl', 'rb') as f:
-    model = pickle.load(f)
+try:
+    with open('final_optimized_classification_model.pkl', 'rb') as f:
+        model = pickle.load(f)
+    print("✅ Model loaded successfully")
+except Exception as e:
+    print(f"❌ Model loading failed: {e}")
 
 def run_url_prob_pipeline(url):    
     print("⭕️ run_url_prob_pipeline loaded")
@@ -33,7 +37,7 @@ def run_url_prob_pipeline(url):
     mp = requests.get(r.json()["url"])
     with open("/tmp/song.mp3", "wb") as f:
         f.write(mp.content)
-
+    print("⭕️ download complete")
     def columns():
         feature_sizes = dict(chroma_stft=12, chroma_cqt=12, chroma_cens=12,
                             tonnetz=6, mfcc=20, rmse=1, zcr=1,
