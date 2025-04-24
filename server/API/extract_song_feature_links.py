@@ -31,7 +31,7 @@ def run_url_prob_pipeline(url):
         
     
     mp = requests.get(r.json()["url"])
-    with open("song.mp3", "wb") as f:
+    with open("/tmp/song.mp3", "wb") as f:
         f.write(mp.content)
 
     def columns():
@@ -69,7 +69,7 @@ def run_url_prob_pipeline(url):
             features[name, 'max'] = np.max(values, axis=1)
 
         try:
-            x, sr = librosa.load("song.mp3", sr=None, mono=True)
+            x, sr = librosa.load("/tmp/song.mp3", sr=None, mono=True)
 
             f = librosa.feature.zero_crossing_rate(x, frame_length=2048, hop_length=512)
             feature_stats('zcr', f)

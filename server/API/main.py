@@ -23,7 +23,9 @@ app.add_middleware(
 @app.get("/")
 def read_root():
     return {"status": "FastAPI is running on Render!"}
-    
+@app.get("/recommend")
+def read_root():
+    return {"status": "recommend is running on Render!"}
 @app.post("/recommend")
 def recommend_from_url(input: URLInput):
     result = run_pipeline(input.url)  
