@@ -4,7 +4,7 @@ from extract_song_feature_links import run_url_prob_pipeline
 from recommendation_pipeline import new_song_recommendations
 
 
-
+print("🟢 begin")
 
 
 # your_notebook.py (after cleanup)

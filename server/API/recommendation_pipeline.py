@@ -1,4 +1,4 @@
-
+print("🟢 recommendation.py loaded")
 
 
 import pandas as pd
@@ -17,6 +17,7 @@ db = client["FMA_Recommendation"]
 recommendation = db["recommendation"]
 track_artist_genre = db["track_artist_genre"]
 
+print("🟢 mongo loaded")
 
 recommendation_data = pd.DataFrame(list(recommendation.find())).drop("_id",axis=1)
 track_title_artist = pd.DataFrame(list(track_artist_genre.find())).drop("_id",axis=1)

@@ -1,7 +1,7 @@
 # pip install --upgrade yt_dlp
 # pip install pytubefix
 
-
+print("🟢 extraction.py loaded")
 from pytubefix import YouTube
 import os
 import multiprocessing

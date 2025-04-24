@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from api_pipeline import run_pipeline
 from fastapi.middleware.cors import CORSMiddleware
-
+print("🟢 main.py loaded")
 app = FastAPI()
 
 class URLInput(BaseModel):
