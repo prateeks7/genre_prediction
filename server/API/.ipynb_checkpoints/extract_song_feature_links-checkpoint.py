@@ -12,6 +12,7 @@ import pandas as pd
 import librosa
 from tqdm import tqdm
 import requests
+import re
 
 import pickle
 with open('final_optimized_classification_model.pkl', 'rb') as f:
@@ -23,8 +24,15 @@ def run_url_prob_pipeline(url):
     api_url = "https://youtube-to-mp315.p.rapidapi.com/download"
     params = {"url": url}
     headers = {'x-rapidapi-key': os.getenv("RAPID_API"),'x-rapidapi-host': 'youtube-to-mp315.p.rapidapi.com'}
+
     
     r = requests.post(api_url, params=params, headers=headers)
+    print(r.json())
+    g = requests.get(f"https://youtube-to-mp315.p.rapidapi.com/status/{r.json()["id"]}", params=params, headers=headers)
+    while g.json()["status"] == "CONVERTING":
+        g = requests.get(f"https://youtube-to-mp315.p.rapidapi.com/status/{r.json()["id"]}", params=params, headers=headers)
+        print(g.json())
+        time.sleep(30)
     
     mp = requests.get(r.json()["downloadUrl"])
     with open("song.mp3", "wb") as f:
