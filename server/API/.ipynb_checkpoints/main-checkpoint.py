@@ -28,5 +28,6 @@ def read_root():
     return {"status": "recommend is running on Render!"}
 @app.post("/recommend")
 def recommend_from_url(input: URLInput):
+    print("⭕️ recommend_from_url")
     result = run_pipeline(input.url)  
     return {"result": result}
