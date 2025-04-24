@@ -133,6 +133,6 @@ def run_url_prob_pipeline(url):
     url_features = url_features.drop('mel_spec',axis=1).merge(mel_spec,left_index=True,right_index=True)
     
     # features.to_csv("song.csv")
-
+    print(url_features)
     return pd.DataFrame(model.predict_proba(url_features),columns = ["Rock","Electronic","Pop","Hip-Hop","Folk"])
 
