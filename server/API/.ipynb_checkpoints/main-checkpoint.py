@@ -8,10 +8,10 @@ app = FastAPI()
 class URLInput(BaseModel):
     url: str  
 
-origins = [
-    "http://localhost:8080",  # React dev server
-    # "http://127.0.0.1:3000",
-]
+# origins = [
+#     "",  # React dev server
+#     # "http://127.0.0.1:3000",
+# ]
 
 app.add_middleware(
     CORSMiddleware,
@@ -20,7 +20,10 @@ app.add_middleware(
     allow_methods=["*"],            # allow all HTTP methods (POST, GET, etc.)
     allow_headers=["*"],            # allow all headers
 )
-
+@app.get("/")
+def read_root():
+    return {"status": "FastAPI is running on Render!"}
+    
 @app.post("/recommend")
 def recommend_from_url(input: URLInput):
     result = run_pipeline(input.url)  

@@ -19,7 +19,7 @@ with open('final_optimized_classification_model.pkl', 'rb') as f:
 def run_url_prob_pipeline(url):    
     
 
-    yt = YouTube(url)
+    yt = YouTube(url,use_po_token=True)
 
     video = yt.streams.filter(only_audio=True).first()
 
