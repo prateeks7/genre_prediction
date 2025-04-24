@@ -15,6 +15,9 @@ import requests
 
 import pickle
 try:
+    print("Model file exists:", os.path.exists("final_optimized_classification_model.pkl"))
+    print("RAPID_API:", os.getenv("RAPID_API"))
+
     with open('final_optimized_classification_model.pkl', 'rb') as f:
         model = pickle.load(f)
     print("✅ Model loaded successfully")
