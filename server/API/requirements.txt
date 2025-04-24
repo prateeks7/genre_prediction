@@ -10,3 +10,4 @@ pandas
 numpy
 librosa
 xgboost
+requests
