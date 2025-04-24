@@ -26,7 +26,8 @@ track_title_artist = track_title_artist.replace([np.inf, -np.inf], np.nan).filln
 
 
 def new_song_recommendations(url_gerne_prob):
-
+    print(url_gerne_prob)
+    print(recommendation_data[url_gerne_prob.columns])
     
     new_song_similarities = cosine_similarity(url_gerne_prob,recommendation_data[url_gerne_prob.columns])
     recommendation_data["cosine_similarity"] = new_song_similarities[0]
