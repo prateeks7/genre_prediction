@@ -8,10 +8,10 @@ app = FastAPI()
 class URLInput(BaseModel):
     url: str  
 
-# origins = [
-#     "",  # React dev server
-#     # "http://127.0.0.1:3000",
-# ]
+origins = [
+    "https://genre-prediction-8knm.onrender.com",  # React dev server
+    # "http://127.0.0.1:3000",
+]
 
 app.add_middleware(
     CORSMiddleware,
