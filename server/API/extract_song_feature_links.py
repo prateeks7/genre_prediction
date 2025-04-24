@@ -19,15 +19,15 @@ with open('final_optimized_classification_model.pkl', 'rb') as f:
 def run_url_prob_pipeline(url):    
     
 
-    yt = YouTube(url,use_po_token=True)
-
-    video = yt.streams.filter(only_audio=True).first()
-
-    out_file = video.download(output_path="")
-
-    base, ext = os.path.splitext(out_file)
-    new_file = "song" + '.wav'
-    os.rename(out_file, new_file)
+    api_url = "https://youtube-to-mp315.p.rapidapi.com/download"
+    params = {"url": url}
+    headers = {'x-rapidapi-key': os.getenv("RAPID_API"),'x-rapidapi-host': 'youtube-to-mp315.p.rapidapi.com'}
+    
+    r = requests.post(api_url, params=params, headers=headers)
+    
+    mp = requests.get(r.json()["downloadUrl"])
+    with open("song.mp3", "wb") as f:
+        f.write(mp.content)
 
     def columns():
         feature_sizes = dict(chroma_stft=12, chroma_cqt=12, chroma_cens=12,
@@ -64,7 +64,7 @@ def run_url_prob_pipeline(url):
             features[name, 'max'] = np.max(values, axis=1)
 
         try:
-            x, sr = librosa.load("song.wav", sr=None, mono=True)
+            x, sr = librosa.load("song.mp3", sr=None, mono=True)
 
             f = librosa.feature.zero_crossing_rate(x, frame_length=2048, hop_length=512)
             feature_stats('zcr', f)
