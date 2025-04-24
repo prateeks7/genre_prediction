@@ -21,22 +21,17 @@ with open('final_optimized_classification_model.pkl', 'rb') as f:
 def run_url_prob_pipeline(url):    
     
 
-    api_url = "https://youtube-to-mp315.p.rapidapi.com/download"
-    params = {"url": url}
-    headers = {'x-rapidapi-key': os.getenv("RAPID_API"),'x-rapidapi-host': 'youtube-to-mp315.p.rapidapi.com'}
-
+    api_url = "https://youtube-to-mp335.p.rapidapi.com/api/converttomp3"
+    headers= {'x-rapidapi-key': os.getenv("RAPID_API"),'x-rapidapi-host': 'youtube-to-mp335.p.rapidapi.com','Content-Type': 'application/json'}
+    data= {"url": url}
     
-    r = requests.post(api_url, params=params, headers=headers)
+    r = requests.post(api_url, json=data, headers=headers)
+    print(r)
     print(r.json())
-    status_id = r.json()["id"]
-    g = requests.get(f"https://youtube-to-mp315.p.rapidapi.com/status/{status_id}", params=params, headers=headers)
-    while g.json()["status"] == "CONVERTING":
-        time.sleep(30)
-        g = requests.get(f"https://youtube-to-mp315.p.rapidapi.com/status/{status_id}", params=params, headers=headers)
-        print(g.json())
+    print(r.json()["url"])
         
     
-    mp = requests.get(r.json()["downloadUrl"])
+    mp = requests.get(r.json()["url"])
     with open("song.mp3", "wb") as f:
         f.write(mp.content)
 
