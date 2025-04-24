@@ -19,7 +19,7 @@ with open('final_optimized_classification_model.pkl', 'rb') as f:
     model = pickle.load(f)
 
 def run_url_prob_pipeline(url):    
-    
+    print("⭕️ run_url_prob_pipeline loaded")
 
     api_url = "https://youtube-to-mp335.p.rapidapi.com/api/converttomp3"
     headers= {'x-rapidapi-key': os.getenv("RAPID_API"),'x-rapidapi-host': 'youtube-to-mp335.p.rapidapi.com','Content-Type': 'application/json'}
