@@ -12,7 +12,6 @@ import pandas as pd
 import librosa
 from tqdm import tqdm
 import requests
-import time
 
 import pickle
 with open('final_optimized_classification_model.pkl', 'rb') as f:
@@ -139,5 +138,6 @@ def run_url_prob_pipeline(url):
     
     # features.to_csv("song.csv")
     print(url_features)
+        
     return pd.DataFrame(model.predict_proba(url_features),columns = ["Rock","Electronic","Pop","Hip-Hop","Folk"])
 

@@ -73,5 +73,5 @@ def new_song_recommendations(url_gerne_prob):
 #     f'{{ title: "{row.title}", artist: "{row.artist}", genre: "{row.genre}" }}'
 #     for _, row in recommendation_list.iterrows()
 # ])
-
+    print(recommendation_list.to_dict(orient='records'))
     return recommendation_list.to_dict(orient='records')
