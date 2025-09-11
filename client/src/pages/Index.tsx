@@ -33,7 +33,7 @@ const Index = () => {
     e.preventDefault();
     if (url.trim() === "") return;
     try {
-      const response = await fetch("http://127.0.0.1:2020/recommend", {
+      const response = await fetch("https://genre-prediction-8knm.onrender.com/recommend", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
