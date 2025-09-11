@@ -24,23 +24,41 @@ try:
 except Exception as e:
     print(f"❌ Model loading failed: {e}")
 
+
+
 def run_url_prob_pipeline(url):    
     print("⭕️ run_url_prob_pipeline loaded")
 
-    api_url = "https://youtube-to-mp335.p.rapidapi.com/api/converttomp3"
-    headers= {'x-rapidapi-key': os.getenv("RAPID_API"),'x-rapidapi-host': 'youtube-to-mp335.p.rapidapi.com','Content-Type': 'application/json'}
-    data= {"url": url}
+    # api_url = "https://youtube-to-mp335.p.rapidapi.com/api/converttomp3"
+    # headers= {'x-rapidapi-key': os.getenv("RAPID_API"),'x-rapidapi-host': 'youtube-to-mp335.p.rapidapi.com','Content-Type': 'application/json'}
+    # data= {"url": url}
     
-    r = requests.post(api_url, json=data, headers=headers)
-    print(r)
-    print(r.json())
-    print(r.json()["url"])
+    # r = requests.post(api_url, json=data, headers=headers)
+    # print(r)
+    # print(r.json())
+    # print(r.json()["url"])
         
     
-    mp = requests.get(r.json()["url"])
-    with open("/tmp/song.mp3", "wb") as f:
-        f.write(mp.content)
+    # mp = requests.get(r.json()["url"])
+    # with open("/tmp/song.mp3", "wb") as f:
+    #     f.write(mp.content)
+
+    yt = YouTube(url)
+    
+    video = yt.streams.filter(only_audio=True).first()
+    
+    print("Enter the destination (leave blank for current directory)")
+    destination = ""
+    
+    out_file = video.download(output_path=destination)
+    
+    # base, ext = os.path.splitext(out_file)
+    # new_file = "song" + '.wav'
+    # os.rename(out_file, new_file)
+
+    print(yt.title + " has been successfully downloaded.")
     print("⭕️ download complete")
+    
     def columns():
         feature_sizes = dict(chroma_stft=12, chroma_cqt=12, chroma_cens=12,
                             tonnetz=6, mfcc=20, rmse=1, zcr=1,
@@ -76,7 +94,7 @@ def run_url_prob_pipeline(url):
             features[name, 'max'] = np.max(values, axis=1)
 
         try:
-            x, sr = librosa.load("/tmp/song.mp3", sr=None, mono=True)
+            x, sr = librosa.load(out_file, sr=None, mono=True)
 
             f = librosa.feature.zero_crossing_rate(x, frame_length=2048, hop_length=512)
             feature_stats('zcr', f)

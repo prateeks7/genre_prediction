@@ -23,9 +23,8 @@ recommendation_data = pd.DataFrame(list(recommendation.find())).drop("_id",axis=
 track_title_artist = pd.DataFrame(list(track_artist_genre.find())).drop("_id",axis=1)
 recommendation_data.set_index("track_id",inplace=True)
 track_title_artist.set_index("track_id",inplace=True)
-track_title_artist = track_title_artist.replace([np.inf, -np.inf], np.nan).fillna("-")
-
-
+track_title_artist = track_title_artist.replace([np.inf, -np.inf], np.nan).fillna("Random")
+print(track_title_artist)
 def new_song_recommendations(url_gerne_prob):
     print(url_gerne_prob)
     print(recommendation_data[url_gerne_prob.columns])
@@ -56,10 +55,9 @@ def new_song_recommendations(url_gerne_prob):
 
 
 
-    top_recommendations["final_score"] = (0.5 * top_recommendations["cosine_similarity"]
-                    + 0.3 * normalized_features["normalized_listens"]
-                + 0.1 * normalized_features["normalized_favorites"]
-                + 0.1 * normalized_features["normalized_interest"])
+    top_recommendations["final_score"] = (0.5 * normalized_features["normalized_listens"]
+                + 0.3 * normalized_features["normalized_favorites"]
+                + 0.2 * normalized_features["normalized_interest"])
 
 
     # top_recommendations["final_score"].mean()
@@ -68,7 +66,7 @@ def new_song_recommendations(url_gerne_prob):
     final_recommendations = top_recommendations.sort_values("final_score", ascending=False)
 
     recommendation_list =  pd.DataFrame({"title" : track_title_artist["title"].loc[final_recommendations.index].values, "artist" : track_title_artist["artist"].loc[final_recommendations.index].values, "genre" : track_title_artist["genre_top"].loc[final_recommendations.index].values})
-
+    recommendation_list
 #     formatted_json = ',\n'.join([
 #     f'{{ title: "{row.title}", artist: "{row.artist}", genre: "{row.genre}" }}'
 #     for _, row in recommendation_list.iterrows()

@@ -10,7 +10,8 @@ class URLInput(BaseModel):
 
 origins = [
     "https://genre-prediction-8knm.onrender.com",  # React dev server
-    # "http://127.0.0.1:3000",
+    "http://localhost:8080",
+    "http://127.0.0.1:2020"
 ]
 
 app.add_middleware(

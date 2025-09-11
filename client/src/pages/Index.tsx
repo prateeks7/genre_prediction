@@ -33,7 +33,7 @@ const Index = () => {
     e.preventDefault();
     if (url.trim() === "") return;
     try {
-      const response = await fetch("http://localhost:5050/recommend", {
+      const response = await fetch("http://127.0.0.1:2020/recommend", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
