@@ -43,7 +43,7 @@ def run_url_prob_pipeline(url):
     # with open("/tmp/song.mp3", "wb") as f:
     #     f.write(mp.content)
 
-    yt = YouTube(url,use_po_token=True,po_token=os.getenv("YT_PO_TOKEN"))
+    yt = YouTube(url,use_po_token=True,po_token=os.getenv("YT_PO_TOKEN"),visitorData:os.getenv("YT_VISITOR_DATA"))
     
     video = yt.streams.filter(only_audio=True).first()
     
