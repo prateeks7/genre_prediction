@@ -1,8 +1,8 @@
 # pip install --upgrade yt_dlp
-# pip install pytubefix
+# !pip install msgpack
 
 print("🟢 extraction.py loaded")
-from pytubefix import YouTube
+from yt_dlp import YoutubeDL
 import os
 import multiprocessing
 import warnings
@@ -12,6 +12,9 @@ import pandas as pd
 import librosa
 from tqdm import tqdm
 import requests
+import tempfile
+from yt_dlp.utils import DownloadError
+
 
 import pickle
 try:
@@ -25,7 +28,60 @@ except Exception as e:
     print(f"❌ Model loading failed: {e}")
 
 
+def _download_audio_to_tmp(url: str) -> str:
+    """
+    Download best available file-based audio (avoid HLS) and convert to WAV for Librosa.
+    Retries/timeouts tuned to avoid flakiness.
+    Returns the final WAV path. Caller must delete it.
+    """
+    tmp = tempfile.NamedTemporaryFile(delete=False)
+    tmp_base = tmp.name
+    tmp.close()
 
+    # Prefer m4a over HLS to avoid m3u8 timeouts; add robust retry & timeout settings
+    ydl_opts = {
+        "format": "bestaudio[ext=m4a]/bestaudio/best",
+        "outtmpl": tmp_base + ".%(ext)s",
+        "quiet": True,
+        "noprogress": True,
+        "retries": 10,
+        "fragment_retries": 10,
+        "socket_timeout": 30,
+        "nocheckcertificate": True,
+        "noplaylist": True,          # don’t traverse playlists
+        "geo_bypass": True,
+        # Chunked HTTP can help flaky networks; try 10 MB first
+        "http_chunk_size": 10 * 1024 * 1024,
+        # Convert to wav for consistent librosa loading
+        "postprocessors": [{
+            "key": "FFmpegExtractAudio",
+            "preferredcodec": "wav",
+            "preferredquality": "192",
+        }],
+    }
+
+    # Optional: allow proxy via env var YT_DLP_PROXY (Render/Vercel sometimes need it)
+    proxy = os.environ.get("YT_DLP_PROXY")
+    if proxy:
+        ydl_opts["proxy"] = proxy
+
+    def _do_download(chunk_size=None):
+        opts = dict(ydl_opts)
+        if chunk_size is not None:
+            opts["http_chunk_size"] = chunk_size
+        with YoutubeDL(opts) as ydl:
+            info = ydl.extract_info(url, download=True)
+            try:
+                return info["requested_downloads"][0]["filepath"]
+            except Exception:
+                return tmp_base + ".wav"
+
+    try:
+        # 1st attempt: 10MB chunks (helps flaky links)
+        return _do_download(chunk_size=10 * 1024 * 1024)
+    except DownloadError:
+        # 2nd attempt: disable chunking to let yt_dlp stream continuously
+        return _do_download(chunk_size=None)
 def run_url_prob_pipeline(url):    
     print("⭕️ run_url_prob_pipeline loaded")
 
@@ -43,20 +99,13 @@ def run_url_prob_pipeline(url):
     # with open("/tmp/song.mp3", "wb") as f:
     #     f.write(mp.content)
 
-    yt = YouTube(url,use_po_token=True,token_file="token_file.json")
-    
-    video = yt.streams.filter(only_audio=True).first()
-    
-    print("Enter the destination (leave blank for current directory)")
-    destination = ""
-    
-    out_file = video.download(output_path=destination)
-    
+    out_file = _download_audio_to_tmp(url)
+    print(out_file)
     # base, ext = os.path.splitext(out_file)
     # new_file = "song" + '.wav'
     # os.rename(out_file, new_file)
 
-    print(yt.title + " has been successfully downloaded.")
+    # print(out_file.title + " has been successfully downloaded.")
     print("⭕️ download complete")
     
     def columns():
@@ -165,4 +214,3 @@ def run_url_prob_pipeline(url):
     print(url_features)
         
     return pd.DataFrame(model.predict_proba(url_features),columns = ["Rock","Electronic","Pop","Hip-Hop","Folk"])
-

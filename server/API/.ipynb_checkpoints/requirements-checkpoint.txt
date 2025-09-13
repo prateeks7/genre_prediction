@@ -11,3 +11,6 @@ numpy
 librosa
 xgboost
 requests
+msgpack
+yt_dlp
+tempfile
