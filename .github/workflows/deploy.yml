@@ -26,11 +26,20 @@ jobs:
         working-directory: client
       - run: npm run build
         working-directory: client
-      - run: cp index.html 404.html && touch .nojekyll
-        working-directory: client/dist
+
+      # ✅ Official step (sets Pages env correctly)
+      - uses: actions/configure-pages@v5
+
+      # ✅ Always operate on absolute paths
+      - name: Add SPA fallback and disable Jekyll
+        run: |
+          cp client/dist/index.html client/dist/404.html
+          touch client/dist/.nojekyll
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: client/dist
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
